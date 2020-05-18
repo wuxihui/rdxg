@@ -1,183 +1,95 @@
 <template>
     <div class="el-plate-list">
-        <button @click="handleClick">消息提示</button>
-        <button @click="handleTimeClick">获取后台时间格式</button>
-        <p>{{formatTime(time)}}</p>
-
-        <!-- <div 
-          class="box" 
-          id="box" 
-          @mousedown="down"
-          ></div> -->
-
-        <div class="form-all-style">
-            <div style="height: 432px" id="zhankaiStyle" class="bottom-form" ref="kongtiao"
-               @mousedown="mouseDownHandleelse($event)" 
-               @mouseleave="leave($event)"
-               @mouseup="mouseUpHandleelse()">
-            </div>
-        </div>
-        
-       
-
+        <el-button type="primary" @click="msgBtn">{{msg}}</el-button>
+        <el-card shadow="always">{{test}}</el-card>
+        <button @click="tsHandler(test)">ts测试</button>
+        <p>{{task}}</p>
     </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-import Cookies from "js-cookie";
-export default {
-    name: "plateList",
-    computed: {
-        ...mapState("radar", ["time"]),
-        TopDongChange() {
-            return this.moveDataelse.TopDong;
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+    data() {
+        return {
+            msg: "typescript",
+            test: "ts测试",
+            task: "变化后的ts",
         }
     },
-    
-    data() {
-         return {
-            moveDataelse: {
-                x: null,
-                y: null,
-                TopDong: null
-            },
-            topHeight: null,
-            minHeight: 410,
-            maxHeight: 700,
-         }
+    created() {
+        console.log('created',this.msg)
     },
     mounted() {
-        Cookies.set('chazhiValue', 432);
-    },
-    watch: {
-      // 定位top的变化值，就是元素高度的变化值，通过原始值和元素top定位的变化值最终得到的就是height高度值
-      TopDongChange(newVal, oldVal) {
-        var reduce
-        // 因为oldVal起始值为null，所以先排除掉
-        if (!oldVal && typeof oldVal === 'object') {
-          console.log(oldVal);
-          reduce = 0
-        } else {
-          reduce = oldVal - newVal
-        }
-        document.getElementById('zhankaiStyle').style.height = Number(Cookies.get('chazhiValue')) + reduce + 'px'
-        Cookies.set('chazhiValue', Number(Cookies.get('chazhiValue')) + reduce)
-      }
+        console.log('mounted')
     },
     methods: {
-        handleClick() {
-            // this.commonJS.message("hhh", "success");
-            this.$store.commit("radar/SET_COMMON_INFO", "");
+        msgBtn(ev:any){
+            this.msg = "点击了typescript"
+            console.log('点击事件',ev)
         },
-        handleTimeClick() {
-            let time = "2018-01-03T02:01:13.678Z";
-            this.$store.commit("radar/SET_TIME", time);
+        tsHandler(test: string) {
+            this.task = test;
+            //boolean
+            let isDone: boolean = false;
+            console.log(isDone);
+            //number
+            let decLiteral: number = 6;
+            let hexLiteral: number = 0xf00d;
+            console.log(decLiteral);
+            console.log(hexLiteral);
+            //string
+            let name: string = "bob";
+            name = "switch";
+            console.log(name);
+            //使用(``)和${}
+            let nameTwo: string = "Gene";
+            let age: number = 26;
+            // let sentence: string = `Hello, my name is ${ nameTwo }. I'll be ${ age + 1 } years old`;
+            let sentence: string = "Hello, my name is" + nameTwo + ".\n\n" + "I'll be" + (age + 1) + "years old";
+            console.log(sentence);
+            //数组
+            let list: number[] = [1, 2, 3];
+            console.log(list);
+            let listTwo: Array<number> = [4, 5, 6];
+            console.log(listTwo);
+            //元组
+            let tuple: [string, number];
+            tuple = ['hello', 10];
+            console.log(tuple);
+            //枚举 
+            enum Color { Black, Green, Red }
+            let c: Color = Color.Green;
+            console.log(c);
+            // enum Color { Red = 1, Green = 3, Blue = 5 }
+            let colorName: string = Color[1];
+            // let a: Color = Color.Blue;
+            // console.log(a);
+            console.log(colorName);
+            //Any 任意类型可以转换 类型的变量只是允许你给它赋任意值, 也可以调取上面的任意方法
+            let notSure: any = 4;
+            notSure = "maybe a string instead";
+            console.log(notSure);
+            notSure = false;
+            console.log(notSure);
+            let listThree: Array<any> = [1, true, "free"];
+            // let listThree: any[] = [1, true, "free"];
+            listThree[1] = 100;
+            console.log(listThree);
+            //Object类型的变量只是允许你给它赋任意值, 但是不能调取上面的任意方法
+            let prettySure: Object = 4;
+            console.log(prettySure);
+            //void  只能赋予undefined和null
+            let unusable: void = undefined;
+            console.log(unusable);
         },
-        //时区修正
-        formatTime(time) {
-          return this.commonJS.formatBuildTime(time);
-        },
-
-
-
-        //鼠标按下
-      mouseDownHandleelse(e) {
-          e=e || window.event;
-        // this.pauseEvent(e);
-        this.moveDataelse.y = e.pageY - this.$refs.kongtiao.offsetTop;
-        e.currentTarget.style.cursor = 'move';
-        window.onmousemove = this.mouseMoveHandleelse;
-        event.preventDefault();
-      },
-       // 鼠标移动
-      mouseMoveHandleelse(event) {
-        this.topHeight = event.pageY - this.moveDataelse.y;
-        this.topHeight = this.topHeight < this.minHeight ? this.minHeight : this.topHeight;
-        this.topHeight = this.topHeight > this.maxHeight ? this.maxHeight : this.topHeight;
-        this.moveDataelse.TopDong = this.topHeight;
-        console.log(666);
-        console.log("this.maxHeight:", this.maxHeight);
-        console.log("this.minHeight:", this.minHeight);
-        console.log("this.moveDataelse.topMove:", this.moveDataelse.topMove);
-        console.log("this.topHeight:", this.topHeight);
-        //区别onclick事件
-        return false;
-      },
-       // 鼠标松开
-      mouseUpHandleelse() {
-        window.onmousemove = null;
-      },
-      pauseEvent(e){
-            if(e.stopPropagation) e.stopPropagation();
-            if(e.preventDefault) e.preventDefault();
-            e.cancelBubble=true;
-            e.returnValue=false;
-            return false;
-        },
-
-     leave() {
-         this.mouseUpHandleelse();
-     },
-     down: function(e){
-        e = e ||event;
-        var oBox = document.getElementById("box");
-        var y = e.clientY;
-        var oBoxH = oBox.offsetHeight;
-        document.onmousemove = function(e){
-            var yy = e.clientY;
-            let topHeight = oBoxH + yy - y + 'px';
-            console.log(topHeight);
-            // topHeight = topHeight < 200 ? 200 : topHeight;
-            // topHeight = topHeight > 600 ? 600 : topHeight;
-            console.log(888);
-            
-            console.log(oBox.style.height);
-            
-            oBox.style.height = topHeight;
-            if(oBox.style.height == 200 + "px") {
-                oBox.style.height = 200;
-                console.log(666);
-                console.log(oBox.style.height);
-            } else if(oBox.style.height == 600 + "px") {
-                oBox.style.height = 600;
-            } else {
-                oBox.style.height = topHeight;
-            }
-            return false;
-        }
-        document.onmouseup = function(){
-            document.onmousemove = null;
-            document.onmouseup = null;
-        }
-        if(e.preventDefault){
-            e.preventDefault();
+        //当一个函数没有返回值时，你通常会见到其返回值类型是 void
+        warnUser(): void {
+            console.log("This is my warning message");
         }
     }
-    }
-}
+}) 
 </script>
-
 <style scoped lang="less">
 @import '~@/common/css/plate/plateList.less';
-.form-all-style {
-    width: 100%;
-    height: 100%;
-  }
- 
-.bottom-form {
-    width: calc(100% - 120px);
-    position: fixed;
-    bottom: 0px;
-    height: 432px;
-    padding-top: 30px;
-    background-color: saddlebrown;
-}
-.box {
-    width: 100%;
-    height: 300px;
-    position: absolute;
-    background: red;
-    margin-top: 20px;
-}
 </style>
