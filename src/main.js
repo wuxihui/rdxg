@@ -7,6 +7,12 @@ import router from './router'
 import store from './store'
 import commonJS from './common/js'
 import _ from "lodash"
+//路由问题
+import Router from 'vue-router'
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
 //
 import VueDraggableResizable from 'vue-draggable-resizable'
 import 'vue-draggable-resizable/dist/VueDraggableResizable.css'

@@ -21,6 +21,7 @@ const PlateList = asyncPages("plate/PlateList");
 const PlateComponent = asyncPages("plate/PlateComponent");
 const CacheMessage = asyncPages("system/CacheMessage");
 const OperaTionLog = asyncPages("indexAlgorithm/OperaTionLog");
+const Test = asyncPages("test/Test");
 
 const router = new VueRouter({
   routes: [
@@ -68,6 +69,11 @@ const router = new VueRouter({
       path: "/plateComponent",
       name: "plateComponent",
       component: PlateComponent
+    },
+    {
+      path: "/test",
+      name: "test",
+      component: Test
     },
     {
       path: "*",
